@@ -1,0 +1,105 @@
+# Other-law module (spec §6).
+# Raises flags (never resolves them) for specialist advice. Each flag is keyed
+# to triggers — artefact types, system types, or sensitivity flags present.
+# Reusable across all cases; per-case tuning is supported via case-specific
+# additions.
+
+module_id: other_law_flags
+version: 1
+
+flags:
+  - id: privacy_act
+    name: Privacy Act 1988 (Cth) and Australian Privacy Principles
+    trigger_if_any:
+      artefact_types: [records, data_logs, training_data, human_oversight]
+      sensitivity_flags: [privacy]
+    guidance: >
+      Where the artefact contains personal information about workers, APPs
+      apply. Consider de-identification, minimum-necessary access, and APP 11
+      security obligations. Specialist advice required.
+    hand_off_to: [privacy_officer, legal]
+
+  - id: ppipa
+    name: Privacy and Personal Information Protection Act 1998 (NSW)
+    trigger_if_any:
+      sensitivity_flags: [ppipa]
+    guidance: >
+      PPIPA engages where the PCBU is (or is handling data on behalf of) a
+      NSW public sector agency. Access and use must comply with the NSW
+      IPPs. Specialist advice required.
+    hand_off_to: [privacy_officer, legal]
+
+  - id: hripa
+    name: Health Records and Information Privacy Act 2002 (NSW)
+    trigger_if_any:
+      sensitivity_flags: [hripa]
+    guidance: >
+      HRIPA applies to health information (including, in some contexts,
+      fatigue-monitoring, biometric, or wearable data). Specialist advice
+      required before access to any artefact containing health information.
+    hand_off_to: [privacy_officer, legal]
+
+  - id: workplace_surveillance_act
+    name: Workplace Surveillance Act 2005 (NSW)
+    trigger_if_any:
+      sensitivity_flags: [workplace_surveillance_act]
+      artefact_types: [data_logs]
+    guidance: >
+      Computer, camera, or tracking surveillance must be notified to
+      workers and, in some cases, authorised. If no valid surveillance
+      notice exists, the surveillance itself may be unlawful regardless of
+      the s 21A analysis.
+    hand_off_to: [legal]
+
+  - id: fair_work_act
+    name: Fair Work Act 2009 (Cth)
+    trigger_if_any:
+      system_types: [online_platform]
+    guidance: >
+      Gig-platform workers may be employees, independent contractors, or
+      'employee-like workers' under recent Fair Work amendments. Jurisdiction
+      and remedies may interact with WHS findings. Specialist advice
+      required for platform cases.
+    hand_off_to: [legal, fair_work_specialist]
+
+  - id: commonwealth_override
+    name: Commonwealth law override under s 118(3)
+    trigger_if_any:
+      system_types: [online_platform, generative_ai]
+    guidance: >
+      s 118(3) limits the operation of s 118(1)(a1) where Commonwealth law
+      provides otherwise (notably for federally-regulated platforms or
+      federally-governed AI systems). Specialist advice required.
+    hand_off_to: [legal]
+
+  - id: legal_professional_privilege
+    name: Legal professional privilege
+    trigger_if_any:
+      artefact_types: [records, audit_trails]
+    guidance: >
+      PCBU-held records may include privileged legal advice, particularly
+      around audit trails and change records where legal was consulted.
+      Privilege is not displaced by s 118(1)(a1).
+    hand_off_to: [legal]
+
+  - id: commercial_in_confidence
+    name: Commercial-in-confidence and intellectual property
+    trigger_if_any:
+      artefact_types: [code_and_logic, training_data]
+      sensitivity_flags: [commercial_in_confidence, intellectual_property]
+    guidance: >
+      Source code, model weights, and training data are typically subject
+      to licensing or trade-secret protections. Proportionate access is
+      usually a walkthrough under confidentiality undertakings rather than
+      raw code.
+    hand_off_to: [legal]
+
+  - id: cross_border_data
+    name: Cross-border data-location issues (offshore vendor hosting)
+    trigger_if_any:
+      system_types: [generative_ai, agentic_ai, online_platform]
+    guidance: >
+      Where the system is vendor-hosted offshore, access to artefacts may
+      be subject to foreign law, foreign sovereign requests, or data
+      residency restrictions. Specialist advice required.
+    hand_off_to: [legal, vendor_management]

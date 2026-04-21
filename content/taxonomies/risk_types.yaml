@@ -1,0 +1,46 @@
+# Risk-type taxonomy (spec §3c).
+# Directly from s 21A(2). Unchanged across cases.
+# Sub-patterns derived from the 2022 NSW Select Committee record.
+
+taxonomy_id: risk_types
+version: 1
+source:
+  - "WHS Amendment (Digital Work Systems) Act 2026 (NSW), s 21A(2)"
+  - "NSW Select Committee on the Impact of Technological and Other Change on the Future of Work and Workers in NSW, Final Report (2022)"
+
+entries:
+  - id: unreasonable_workloads
+    name: Excessive or unreasonable workloads
+    statutory_ref: s 21A(2)(a)
+    sub_patterns:
+      - pace_forcing_countdown_timer
+      - always_on_shift_offer
+      - fatigue_inducing_rotation
+      - dynamically_rising_targets
+
+  - id: unreasonable_metrics
+    name: Excessive or unreasonable performance metrics
+    statutory_ref: s 21A(2)(b)
+    sub_patterns:
+      - unpublished_thresholds
+      - ranking_without_context
+      - targets_derived_from_top_performers_only
+      - metrics_not_accounting_for_breaks_or_disability
+
+  - id: unreasonable_monitoring
+    name: Excessive or unreasonable monitoring or surveillance
+    statutory_ref: s 21A(2)(c)
+    sub_patterns:
+      - continuous_location_tracking
+      - idle_time_and_time_off_task_metrics
+      - biometric_or_wearable_monitoring
+      - covert_surveillance
+
+  - id: unlawful_discrimination
+    name: Unlawful discriminatory practices or decision-making
+    statutory_ref: s 21A(2)(d)
+    sub_patterns:
+      - indirect_discrimination_via_proxy_feature
+      - disparate_impact_by_age_or_pregnancy
+      - disability_accommodations_penalised_by_metrics
+      - opaque_scoring_preventing_challenge

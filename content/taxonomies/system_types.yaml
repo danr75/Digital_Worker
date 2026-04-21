@@ -1,0 +1,59 @@
+# System-type taxonomy (spec §3a).
+# Aligned to s 4 definition of "digital work system" and NSW AIAF categories,
+# so a PCBU's AIAF classification can be re-used.
+
+taxonomy_id: system_types
+version: 1
+source:
+  - "Work Health and Safety Amendment (Digital Work Systems) Act 2026 (NSW), s 4"
+  - "NSW AI Assessment Framework (AIAF) system categories"
+
+entries:
+  - id: rule_based
+    name: Rule-based automation
+    description: >
+      Deterministic logic without learning. Business rules execute against
+      input data to produce outcomes; the rules are written by humans and
+      change only when humans change them.
+    aiaf_alignment: non-AI / deterministic automation
+
+  - id: predictive_ml
+    name: Predictive ML system
+    description: >
+      Supervised or unsupervised learning producing predictions, scores, or
+      classifications used in workforce decisions (e.g. pick-rate targets,
+      shift allocation likelihood, attrition scores).
+    aiaf_alignment: narrow AI / predictive
+
+  - id: generative_ai
+    name: Generative AI
+    description: >
+      LLM-based or similar models producing natural-language or image outputs
+      (e.g. automated coaching messages drafted by an LLM, customer-service
+      scripts).
+    aiaf_alignment: generative AI
+
+  - id: agentic_ai
+    name: Agentic AI
+    description: >
+      Systems that plan and take actions across multiple steps without a
+      per-action human in the loop. In a workforce context, these might
+      re-allocate tasks, adjust targets, or escalate to supervisors.
+    aiaf_alignment: agentic AI
+
+  - id: online_platform
+    name: Online platform
+    description: >
+      Two- or multi-sided marketplace that connects workers (or contractors)
+      with work — e.g. gig dispatch for food-delivery or ride-share. Often
+      combines matching algorithms, dynamic pricing, and worker ranking.
+    aiaf_alignment: platform / multi-sided
+
+  - id: hybrid
+    name: Hybrid (specify components)
+    description: >
+      A combination of the above. Most real workplace systems are hybrids —
+      e.g. a rule-based rostering system with a predictive ML component that
+      forecasts demand, plus a generative AI component that drafts messages
+      to workers.
+    aiaf_alignment: hybrid — classify each component separately

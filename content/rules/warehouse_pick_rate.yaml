@@ -1,0 +1,89 @@
+# Warehouse pick-rate case — inner-layer decision-tree branches (spec §4).
+# Case-specific content; merged into the outer scaffolding by
+# src.decision_tree.merge_rulesets.
+#
+# The case overrides the step_4a_case_branch seam with a case-specific
+# sub-question about which sub-component is in focus (algorithm, monitoring,
+# coaching, or dashboard), then routes back to the outer step 5.
+
+ruleset_id: warehouse_pick_rate_inner
+version: 1
+description: >-
+  Inner-layer branches for the warehouse pick-rate scenario (Western Sydney
+  distribution centre, ~1,200 workers, handheld barcode scanners, Wi-Fi
+  triangulation, dynamic target pick rate, supervisor dashboard, automated
+  coaching messages).
+case_id: warehouse_pick_rate
+
+steps:
+  - id: step_4a_case_branch
+    kind: multi_choice
+    title: "Step 4a — Which sub-component of the pick-rate system is in focus?"
+    prompt: >-
+      The warehouse system has four distinguishable sub-components. Select
+      all that you want to inquire about — the tool will surface different
+      artefacts, sensitivity flags, and questions for each.
+    options:
+      - id: pick_rate_algorithm
+        name: Pick-rate target-setting algorithm
+        description: >
+          The logic that sets each worker's target pick rate from historical
+          pick data, tenure, zone, and time-of-day. This is where
+          discriminatory proxy-effects and unreasonable metrics typically
+          live.
+      - id: location_tracking
+        name: Wi-Fi location tracking and 'time off task' metric
+        description: >
+          Continuous location tracking via the handheld scanner. Feeds the
+          idle-time and time-off-task fields in the dashboard. Most directly
+          engages the surveillance limb of s 21A(2)(c) and the Workplace
+          Surveillance Act 2005 (NSW).
+      - id: coaching_messages
+        name: Automated coaching messages
+        description: >
+          The rule or model that generates and dispatches messages to
+          workers below threshold. Engages the performance-metrics limb and
+          potentially generative-AI risks depending on how messages are
+          produced.
+      - id: supervisor_dashboard
+        name: Supervisor dashboard (live ranking)
+        description: >
+          The interface that ranks workers live by pick rate, idle time, and
+          time-off-task. Engages surveillance, metrics, and possible
+          discriminatory-impact risks depending on how the dashboard is
+          used.
+    min_select: 1
+    store_as: warehouse_subcomponents
+    guidance: >
+      Each sub-component is inspectable in principle under s 118(1)(a1), but
+      the proportionate access mode differs: the algorithm leans toward
+      'explain', the logs lean toward 'inspect', the dashboard usually
+      benefits from both.
+    next: step_4b_sub_patterns
+
+  - id: step_4b_sub_patterns
+    kind: multi_choice
+    title: "Step 4b — Which sub-patterns of the risks are present?"
+    prompt: >-
+      Select any patterns you have evidence or strong reason to suspect.
+      These feed the 'grounds' section of the output.
+    options:
+      - id: pace_forcing_countdown_timer
+        name: Pace-forcing via countdown timer
+      - id: dynamically_rising_targets
+        name: Dynamically rising targets with no ceiling
+      - id: continuous_location_tracking
+        name: Continuous location tracking
+      - id: idle_time_and_time_off_task_metrics
+        name: Idle-time and time-off-task metrics
+      - id: disparate_impact_by_age_or_pregnancy
+        name: Disparate impact by age or pregnancy
+      - id: unpublished_thresholds
+        name: Thresholds not disclosed to workers
+      - id: metrics_not_accounting_for_breaks_or_disability
+        name: Metrics that do not accommodate breaks or disability
+      - id: opaque_scoring_preventing_challenge
+        name: Opaque scoring that workers cannot see or challenge
+    min_select: 0
+    store_as: warehouse_sub_patterns
+    next: step_5_access

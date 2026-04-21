@@ -1,0 +1,306 @@
+# Artefact registry entries for the warehouse pick-rate case (spec §5).
+# 18 entries covering algorithm, metrics, records, logs, audit, training data,
+# and human-oversight artefacts across the four sub-components.
+
+case_id: warehouse_pick_rate
+version: 1
+
+entries:
+  # -- pick-rate target-setting algorithm --------------------------------
+  - artefact_id: wh_pick_rate_algo_source
+    artefact_name: Pick-rate target-setting algorithm — source or business rules
+    artefact_type: code_and_logic
+    typical_system_components: [warehouse_management_system, target_setting_service]
+    typical_access_methods: [vendor_walkthrough, code_review_under_nda, documentation_export]
+    sensitivity_flags: [commercial_in_confidence, intellectual_property]
+    proportionality_notes: >
+      Source code itself is rarely proportionate to request. A walkthrough
+      of the business rules, input features, and how the target is computed
+      will usually be sufficient.
+    evidentiary_value: >
+      Establishes whether the target is set on a defensible basis and
+      whether tenure, age, or pregnancy are used either directly or via
+      proxy features.
+    related_risks: [unreasonable_workloads, unreasonable_metrics, unlawful_discrimination]
+    applicable_other_law: [intellectual_property, commercial_in_confidence]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_pick_rate_target_thresholds
+    artefact_name: Pick-rate target thresholds and ranking formulae
+    artefact_type: performance_metrics
+    typical_system_components: [warehouse_management_system, supervisor_dashboard]
+    typical_access_methods: [export, screen_share]
+    sensitivity_flags: [commercial_in_confidence]
+    proportionality_notes: >
+      Proportionate to request the thresholds themselves and how they are
+      derived (median, top quartile, rolling average, etc.). The numeric
+      values are usually discoverable without IP concerns.
+    evidentiary_value: >
+      Directly shows whether metrics are 'excessive or unreasonable' under
+      s 21A(2)(b). Allows comparison against industry safe benchmarks.
+    related_risks: [unreasonable_workloads, unreasonable_metrics]
+    applicable_other_law: [commercial_in_confidence]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_pick_rate_training_data_sample
+    artefact_name: Training data sample used to fit the target-setting model
+    artefact_type: training_data
+    typical_system_components: [target_setting_service, data_warehouse]
+    typical_access_methods: [aggregated_export, data_room_inspection]
+    sensitivity_flags: [privacy, ppipa, commercial_in_confidence]
+    proportionality_notes: >
+      Full training data is rarely proportionate and carries high privacy
+      risk. Aggregated statistics (feature distributions, per-cohort outcomes)
+      are usually sufficient to test for discriminatory impact.
+    evidentiary_value: >
+      Necessary to assess whether the model was trained on data skewed by
+      demographic, tenure, or zone bias. Aggregated cohort statistics can
+      establish disparate-impact grounds.
+    related_risks: [unreasonable_metrics, unlawful_discrimination]
+    applicable_other_law: [privacy_act, ppipa, intellectual_property]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_target_override_records
+    artefact_name: Manual target-override records
+    artefact_type: audit_trails
+    typical_system_components: [warehouse_management_system]
+    typical_access_methods: [export]
+    sensitivity_flags: [privacy]
+    proportionality_notes: >
+      Proportionate to request de-identified override records. Individual
+      records may engage privacy concerns.
+    evidentiary_value: >
+      Shows whether human oversight is real (supervisors frequently override
+      downward when a target is unreasonable) or absent.
+    related_risks: [unreasonable_workloads, unreasonable_metrics]
+    applicable_other_law: [privacy_act, ppipa]
+    example_scenarios: [warehouse_pick_rate]
+
+  # -- Wi-Fi location tracking and 'time off task' -----------------------
+  - artefact_id: wh_location_tracking_config
+    artefact_name: Wi-Fi triangulation configuration (sampling rate, zones)
+    artefact_type: code_and_logic
+    typical_system_components: [scanner_firmware, location_service]
+    typical_access_methods: [vendor_walkthrough, config_export]
+    sensitivity_flags: [commercial_in_confidence]
+    proportionality_notes: >
+      Configuration (sampling rate, zones tracked, retention) is
+      proportionate to request. Full firmware source is not.
+    evidentiary_value: >
+      Establishes the intensity and scope of surveillance — key to
+      s 21A(2)(c) and Workplace Surveillance Act analysis.
+    related_risks: [unreasonable_monitoring]
+    applicable_other_law: [workplace_surveillance_act, privacy_act, ppipa]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_time_off_task_metric_definition
+    artefact_name: "'Time off task' and 'idle time' metric definitions"
+    artefact_type: performance_metrics
+    typical_system_components: [supervisor_dashboard, warehouse_management_system]
+    typical_access_methods: [documentation_export, screen_share]
+    sensitivity_flags: [commercial_in_confidence]
+    proportionality_notes: >
+      Proportionate to request the precise definitions, including what
+      activities are excluded (breaks, rest, consultation with HSR).
+    evidentiary_value: >
+      Shows whether the metric penalises lawful activity (toilet breaks,
+      consultation under s 68, disability accommodations).
+    related_risks: [unreasonable_metrics, unreasonable_monitoring, unlawful_discrimination]
+    applicable_other_law: [workplace_surveillance_act]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_location_data_logs
+    artefact_name: Worker location data logs (raw)
+    artefact_type: data_logs
+    typical_system_components: [location_service, data_warehouse]
+    typical_access_methods: [aggregated_export, data_room_inspection]
+    sensitivity_flags: [privacy, ppipa, workplace_surveillance_act]
+    proportionality_notes: >
+      Raw location data is extremely sensitive. Aggregated or de-identified
+      samples are usually proportionate; individual-level records only on
+      specific grounds (e.g. a named complainant's consent).
+    evidentiary_value: >
+      Establishes actual scope and intensity of surveillance in practice.
+    related_risks: [unreasonable_monitoring]
+    applicable_other_law: [privacy_act, ppipa, workplace_surveillance_act]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_surveillance_notice
+    artefact_name: Surveillance notice issued under Workplace Surveillance Act 2005 (NSW)
+    artefact_type: records
+    typical_system_components: [hr_records]
+    typical_access_methods: [document_export]
+    sensitivity_flags: []
+    proportionality_notes: >
+      Proportionate and usually volunteered by the PCBU; tests whether the
+      surveillance was lawful in the first place.
+    evidentiary_value: >
+      If no valid notice exists, the surveillance itself may be unlawful
+      irrespective of s 21A.
+    related_risks: [unreasonable_monitoring]
+    applicable_other_law: [workplace_surveillance_act]
+    example_scenarios: [warehouse_pick_rate]
+
+  # -- automated coaching messages ---------------------------------------
+  - artefact_id: wh_coaching_message_logic
+    artefact_name: Coaching-message triggering logic
+    artefact_type: code_and_logic
+    typical_system_components: [coaching_service, messaging_gateway]
+    typical_access_methods: [vendor_walkthrough, config_export]
+    sensitivity_flags: [commercial_in_confidence]
+    proportionality_notes: >
+      Proportionate to request the rules: when a message is sent, to whom,
+      and what happens on repeated triggering (escalation path).
+    evidentiary_value: >
+      Shows whether the escalation path itself amounts to unreasonable
+      metrics or surveillance pressure.
+    related_risks: [unreasonable_workloads, unreasonable_metrics]
+    applicable_other_law: [commercial_in_confidence]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_coaching_messages_sent
+    artefact_name: Coaching messages sent to individual workers
+    artefact_type: records
+    typical_system_components: [messaging_gateway, hr_records]
+    typical_access_methods: [aggregated_export, sample_inspection]
+    sensitivity_flags: [privacy, ppipa]
+    proportionality_notes: >
+      Aggregated volumes (e.g. per-cohort) are proportionate; individual
+      message contents only on consent or with de-identification.
+    evidentiary_value: >
+      Demonstrates actual message cadence and tone. Relevant to
+      psychosocial workload and to possible discriminatory patterns.
+    related_risks: [unreasonable_workloads, unlawful_discrimination]
+    applicable_other_law: [privacy_act, ppipa]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_coaching_message_templates
+    artefact_name: Coaching message templates / prompt templates
+    artefact_type: code_and_logic
+    typical_system_components: [coaching_service]
+    typical_access_methods: [documentation_export]
+    sensitivity_flags: [commercial_in_confidence]
+    proportionality_notes: >
+      Proportionate to request. If an LLM is used to generate messages, the
+      prompt template and any safety guardrails are in scope.
+    evidentiary_value: >
+      Shows whether message tone itself is pressuring or threatening, which
+      bears on psychosocial workload.
+    related_risks: [unreasonable_workloads]
+    applicable_other_law: []
+    example_scenarios: [warehouse_pick_rate]
+
+  # -- supervisor dashboard ----------------------------------------------
+  - artefact_id: wh_supervisor_dashboard_spec
+    artefact_name: Supervisor dashboard UI specification / wireframes
+    artefact_type: code_and_logic
+    typical_system_components: [supervisor_dashboard]
+    typical_access_methods: [documentation_export, screen_share]
+    sensitivity_flags: [commercial_in_confidence]
+    proportionality_notes: >
+      Proportionate to request a walkthrough of the fields shown, the
+      ranking logic, and any colour-coding or flagging indicators.
+    evidentiary_value: >
+      Shows what a supervisor sees live — which drives supervisor behaviour
+      toward workers.
+    related_risks: [unreasonable_monitoring, unreasonable_metrics]
+    applicable_other_law: []
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_dashboard_access_logs
+    artefact_name: Supervisor dashboard access logs
+    artefact_type: data_logs
+    typical_system_components: [supervisor_dashboard, auth_service]
+    typical_access_methods: [aggregated_export]
+    sensitivity_flags: [privacy]
+    proportionality_notes: >
+      Proportionate at aggregate level. Individual supervisor use patterns
+      may raise privacy concerns.
+    evidentiary_value: >
+      Shows how often and intensively supervisors consult the dashboard —
+      relevant to whether the dashboard drives disproportionate
+      intervention.
+    related_risks: [unreasonable_monitoring]
+    applicable_other_law: [privacy_act]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_dashboard_ranking_history
+    artefact_name: Historical ranking outputs per worker
+    artefact_type: records
+    typical_system_components: [supervisor_dashboard, data_warehouse]
+    typical_access_methods: [aggregated_export]
+    sensitivity_flags: [privacy, ppipa]
+    proportionality_notes: >
+      Aggregated by cohort (age band, tenure, pregnancy accommodation
+      status) is proportionate; individual rankings only on named complaint.
+    evidentiary_value: >
+      Essential for demonstrating disparate impact by age or pregnancy.
+    related_risks: [unlawful_discrimination, unreasonable_metrics]
+    applicable_other_law: [privacy_act, ppipa]
+    example_scenarios: [warehouse_pick_rate]
+
+  # -- cross-cutting -----------------------------------------------------
+  - artefact_id: wh_system_change_history
+    artefact_name: Change history for thresholds, ranking logic, and metrics
+    artefact_type: audit_trails
+    typical_system_components: [warehouse_management_system, change_management_system]
+    typical_access_methods: [export]
+    sensitivity_flags: [commercial_in_confidence]
+    proportionality_notes: >
+      Proportionate to request. Change history frequently shows threshold
+      creep not communicated to workers.
+    evidentiary_value: >
+      Establishes whether thresholds have risen over time (the
+      'dynamically rising targets' sub-pattern).
+    related_risks: [unreasonable_workloads, unreasonable_metrics]
+    applicable_other_law: []
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_consultation_records
+    artefact_name: Worker/HSR consultation records under s 47–49 WHS Act
+    artefact_type: human_oversight
+    typical_system_components: [hr_records]
+    typical_access_methods: [document_export]
+    sensitivity_flags: []
+    proportionality_notes: >
+      Proportionate to request. Establishes whether consultation occurred
+      before the system or its thresholds were changed.
+    evidentiary_value: >
+      Relevant to primary duty compliance and to whether the employer has a
+      defence based on consultation.
+    related_risks: [unreasonable_workloads, unreasonable_metrics, unreasonable_monitoring, unlawful_discrimination]
+    applicable_other_law: []
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_escalation_records
+    artefact_name: Supervisor-escalation records for underperformance
+    artefact_type: human_oversight
+    typical_system_components: [supervisor_dashboard, hr_records]
+    typical_access_methods: [aggregated_export, sample_inspection]
+    sensitivity_flags: [privacy, ppipa]
+    proportionality_notes: >
+      Aggregated by cohort is proportionate. Tests whether human oversight
+      is applied consistently across workers.
+    evidentiary_value: >
+      Shows whether human oversight in practice corrects or reinforces
+      disparate impact.
+    related_risks: [unreasonable_metrics, unlawful_discrimination]
+    applicable_other_law: [privacy_act, ppipa]
+    example_scenarios: [warehouse_pick_rate]
+
+  - artefact_id: wh_input_output_samples
+    artefact_name: Sample input/output traces for the target-setting algorithm
+    artefact_type: data_logs
+    typical_system_components: [target_setting_service]
+    typical_access_methods: [sample_inspection, data_room_inspection]
+    sensitivity_flags: [privacy, commercial_in_confidence]
+    proportionality_notes: >
+      Proportionate if the walkthrough (wh_pick_rate_algo_source) is
+      insufficient to establish how targets are actually computed in
+      practice. De-identification is a precondition.
+    evidentiary_value: >
+      Where source-code review is not proportionate, traces are the next
+      best evidence of actual behaviour.
+    related_risks: [unreasonable_metrics, unlawful_discrimination]
+    applicable_other_law: [privacy_act, ppipa, commercial_in_confidence]
+    example_scenarios: [warehouse_pick_rate]

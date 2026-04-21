@@ -1,0 +1,35 @@
+case_id: warehouse_pick_rate
+title: "Warehouse pick-rate — Western Sydney distribution centre"
+version: 1
+
+short_description: >-
+  A large Western Sydney distribution centre employs ~1,200 workers on
+  rotating shifts. Handheld barcode scanners assign picks with a countdown
+  timer derived from a dynamically-set target pick rate. Wi-Fi triangulation
+  tracks workers continuously; a supervisor dashboard ranks workers live by
+  pick rate, idle time, and 'time off task'. Automated coaching messages are
+  sent to underperformers and escalate to a supervisor.
+
+evidence_base:
+  - "NSW Select Committee on the Impact of Technological and Other Change on the Future of Work and Workers in NSW, Final Report (2022), Ch 2 (Amazon case study)."
+  - "Second Reading speech, Minister Cotsis — inspectable-artefacts list."
+
+suspected_contraventions:
+  - section: "s 19(3)(c1)"
+    description: "Primary duty — failure to manage risks of digital work systems."
+  - section: "s 21A"
+    description: "Specific duty relating to digital work systems."
+
+eph_grounds:
+  - "Complaints of sustained stress and inability to take toilet breaks."
+  - "Pattern of older workers and pregnant workers disproportionately flagged as underperforming."
+  - "Continuous location tracking via Wi-Fi triangulation from scanners."
+  - "Dynamically rising pick-rate targets with no visible ceiling."
+
+notice_basis: "s 118(1)(a1) — notice requiring reasonable assistance to access and inspect the digital work system."
+
+default_subcomponent_hint: >-
+  Most EPH notices in this scenario will engage the pick-rate algorithm and
+  the supervisor dashboard. If the complaints are primarily about
+  surveillance intensity, the location-tracking sub-component is the
+  primary focus.

@@ -1,0 +1,60 @@
+# Inspectable-artefact taxonomy (spec §3b).
+# Aligned to Minister Cotsis's Second Reading speech enumeration, plus
+# training_data (added because it is technically necessary for ML systems).
+
+taxonomy_id: artefact_types
+version: 1
+source:
+  - "Second Reading speech, Minister Cotsis (NSW)"
+  - "WHS Amendment (Digital Work Systems) Act 2026 (NSW), s 118(1)(a1)"
+
+entries:
+  - id: code_and_logic
+    name: Code and algorithmic logic
+    description: >
+      Source code, business rules, model weights, configuration files, and
+      declarative policies that determine how the system behaves.
+    typical_sensitivity: [commercial_in_confidence, intellectual_property]
+
+  - id: performance_metrics
+    name: Performance metrics
+    description: >
+      Thresholds, targets, ranking logic, scoring formulae — the numeric
+      criteria the system uses to judge worker performance or assign work.
+    typical_sensitivity: [commercial_in_confidence]
+
+  - id: records
+    name: Records
+    description: >
+      Individual worker records, decision records, system-generated
+      instructions to workers (e.g. coaching messages sent).
+    typical_sensitivity: [privacy, ppipa]
+
+  - id: data_logs
+    name: Data logs
+    description: >
+      Access logs, system event logs, input/output logs — capture of what
+      the system did over time.
+    typical_sensitivity: [privacy, workplace_surveillance_act]
+
+  - id: audit_trails
+    name: Audit trails
+    description: >
+      Change history for code, rules, and thresholds; override records;
+      human-intervention records.
+    typical_sensitivity: [commercial_in_confidence]
+
+  - id: training_data
+    name: Training data
+    description: >
+      Data used to train ML/AI components, including labels, sample weights,
+      and any augmentation. Technically necessary to assess discriminatory
+      outcomes or unreasonable metrics in ML-derived systems.
+    typical_sensitivity: [privacy, commercial_in_confidence, intellectual_property]
+
+  - id: human_oversight
+    name: Human-oversight artefacts
+    description: >
+      Human-in-the-loop records, escalation records, supervisor review
+      decisions — evidence that a human was (or wasn't) in the loop.
+    typical_sensitivity: [privacy]

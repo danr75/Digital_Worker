@@ -1,0 +1,162 @@
+# Outer-layer decision-tree scaffolding (spec §4).
+# Reusable across all cases. Per-case rulesets merge additional steps/branches
+# into this scaffolding via src.decision_tree.merge_rulesets.
+
+ruleset_id: outer_layer
+version: 1
+description: "Outer-layer scaffolding for all digital work systems cases."
+entry_step: step_1_role
+
+steps:
+  - id: step_1_role
+    kind: role_selection
+    title: "Step 1 — Role identification"
+    prompt: "Who are you using the tool as today?"
+    guidance: >
+      The tool adapts to four roles (spec §2). Each produces a different
+      output. Select the role that matches how you will use the result.
+    next: step_2_system
+
+  - id: step_2_system
+    kind: multi_choice
+    title: "Step 2 — Is this a digital work system as defined in s 4?"
+    ref_taxonomy: system_types
+    prompt: "Which system type(s) best describe the system in question?"
+    min_select: 1
+    guidance: >
+      A 'digital work system' under s 4 is any automated, algorithmic, or
+      AI-supported system used to assign, direct, evaluate, or monitor work.
+      Most workforce management software will qualify. Select all that apply
+      — real systems are usually hybrids.
+    next: step_3_risks
+
+  - id: step_3_risks
+    kind: multi_choice
+    title: "Step 3 — What s 21A(2) risks are being suspected?"
+    ref_taxonomy: risk_types
+    prompt: "Which risk type(s) are being suspected?"
+    min_select: 1
+    guidance: >
+      The four statutory risks from s 21A(2). Select all that apply. The
+      selection determines which artefacts are proportionate to request in
+      step 4.
+    next: step_4_artefacts
+
+  - id: step_4_artefacts
+    kind: multi_choice
+    title: "Step 4 — What artefacts would be relevant?"
+    ref_taxonomy: artefact_types
+    prompt: "Which artefact type(s) are relevant to the suspected risks?"
+    min_select: 1
+    guidance: >
+      The inspectable-artefact taxonomy from §3b. Each artefact type carries
+      its own sensitivity profile and proportionality notes; see the artefact
+      registry for case-specific entries.
+    next: step_4a_case_branch
+
+  # Step 4a is the seam where case-specific inner branches plug in.
+  # The outer scaffolding defines it as a pass-through; per-case rulesets
+  # override it with case-specific sub-questions.
+  - id: step_4a_case_branch
+    kind: compute
+    title: "Step 4a — Case-specific sub-branch (seam)"
+    description: "Seam for inner-layer branches. Outer default: pass through."
+    emit: {}
+    next: step_5_access
+
+  - id: step_5_access
+    kind: compute
+    title: "Step 5 — What access mode is proportionate?"
+    description: >
+      Determines inspect / explain / both based on selected artefact types.
+      Code, logic, and training data are IP-sensitive and generally lean
+      toward 'explain'; records and logs lean toward 'inspect'; performance
+      metrics and audit trails usually warrant both.
+    rules:
+      - when_any: {artefact_types: [code_and_logic, training_data]}
+        emit:
+          access_mode_include_explain: true
+      - when_any: {artefact_types: [records, data_logs, human_oversight]}
+        emit:
+          access_mode_include_inspect: true
+      - when_any: {artefact_types: [performance_metrics, audit_trails]}
+        emit:
+          access_mode_include_inspect: true
+          access_mode_include_explain: true
+    next: step_5a_finalise_access
+
+  - id: step_5a_finalise_access
+    kind: compute
+    title: "Step 5a — Finalise access mode"
+    description: "Collapse the include_* flags into a single access_mode."
+    finalise_access: true
+    next: step_6_notice
+
+  - id: step_6_notice
+    kind: compute
+    title: "Step 6 — Notice and timing constraints"
+    description: >
+      s 118(2A) requires reasonable notice; s 117 note carries over for
+      urgent safety risks. The engine records the applicable notice period
+      guidance for the role.
+    rules:
+      - when: {role: eph}
+        emit:
+          notice_period_guidance: >-
+            s 118(2A) requires reasonable notice. For non-urgent matters,
+            allow at least 24 hours; longer where artefacts require IT or
+            vendor support to produce.
+      - when: {role: pcbu}
+        emit:
+          notice_period_guidance: >-
+            Respond within the time specified by the notice; if the notice
+            period is unreasonably short given the artefacts requested,
+            engage the EPH about an extension.
+      - when: {role: inspector}
+        emit:
+          notice_period_guidance: >-
+            Part 9 powers operate independently of s 118 notice periods but
+            should still be exercised proportionately and should not
+            duplicate an EPH request already underway.
+      - when: {role: hsr}
+        emit:
+          notice_period_guidance: >-
+            HSRs do not issue s 118 notices directly. Raise concerns with an
+            EPH or with SafeWork; the tool's output for this role is an
+            orientation brief.
+    next: step_7_limits
+
+  - id: step_7_limits
+    kind: other_law_check
+    title: "Step 7 — Limits (s 118(3), privilege, other law)"
+    description: >
+      Surfaces other-law flags based on the system types and artefact types
+      selected. The tool never resolves these; it raises them for specialist
+      advice.
+    next: step_8_artefact_registry
+
+  - id: step_8_artefact_registry
+    kind: artefact_lookup
+    title: "Step 8 — Artefact registry surfacing"
+    description: >
+      Surfaces case-specific artefact-registry entries matching the user's
+      selected artefact types, with metadata (sensitivity, proportionality
+      notes, evidentiary value).
+    next: step_9_output
+
+  - id: step_9_output
+    kind: render_output
+    title: "Step 9 — Output generation"
+    description: >
+      Renders the structured output document via a role-specific Jinja2
+      template. AI-assisted drafting is optional and always labelled.
+    template_map:
+      eph: eph_notice.md
+      pcbu: pcbu_response.md
+      hsr: hsr_brief.md
+      inspector: inspector_plan.md
+    next: step_10_end
+
+  - id: step_10_end
+    kind: end
+    title: "End"
